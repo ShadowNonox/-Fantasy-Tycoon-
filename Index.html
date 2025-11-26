@@ -431,7 +431,7 @@
         </section>
 
         <section id="right-panel">
-            <h2>Boutique de personnages (Auto-Déblocage par Pièces)</h2>
+            <h2>Boutique de personnages (Auto-Déblocage)</h2>
             <div id="shop"></div>
         </section>
     </div>
@@ -492,34 +492,35 @@ const RANDOM_EVENTS = [
 ];
 
 // --- Définitions des entités (Personnages, Bâtiments, Dieux, etc.) ---
+// Le 'type' définit la PRODUCTION. Le COÛT sera l'inverse (géré dans checkAutoAcquisitionCharacters)
 const characters = [ 
     // MODIFIÉ V22: Coûts réduits pour un démarrage plus rapide (X100 pour les 3 premiers, X10 pour les 4e et 5e)
-    {id:'apprentice', name:'Apprenti', cost:500, type:'coin', rate:0.1, icon:'🧑‍🎓'}, // 50000 -> 500
-    {id:'alchemist', name:'Alchimiste', cost:1000, type:'coin', rate:0.3, icon:'⚗️'}, // 100000 -> 1000
-    {id:'mage', name:'Mage', cost:5000, type:'potion', rate:0.2, icon:'🧙'}, // 500000 -> 5000
-    {id:'warrior', name:'Guerrier', cost:100000, type:'potion', rate:0.4, icon:'⚔️'}, // 1000000 -> 100000
-    {id:'beastman', name:'Homme-bête', cost:300000, type:'coin', rate:0.8, icon:'🦹'}, // 3000000 -> 300000
+    {id:'apprentice', name:'Apprenti', cost:500, type:'potion', rate:0.1, icon:'🧑‍🎓'}, // Produit Potion, Coûte Pièce
+    {id:'alchemist', name:'Alchimiste', cost:1000, type:'potion', rate:0.3, icon:'⚗️'}, // Produit Potion, Coûte Pièce
+    {id:'mage', name:'Mage', cost:5000, type:'coin', rate:0.2, icon:'🧙'}, // Produit Pièce, Coûte Potion
+    {id:'warrior', name:'Guerrier', cost:100000, type:'coin', rate:0.4, icon:'⚔️'}, // Produit Pièce, Coûte Potion
+    {id:'beastman', name:'Homme-bête', cost:300000, type:'potion', rate:0.8, icon:'🦹'}, // Produit Potion, Coûte Pièce
     
     // Reste inchangé
-    {id:'assassin', name:'Assassin', cost:5000000, type:'coin', rate:1.0, icon:'🔪'}, 
-    {id:'king', name:'Roi', cost:10000000, type:'coin', rate:2.0, icon:'👑'}, 
-    {id:'queen', name:'Reine', cost:12000000, type:'potion', rate:2.5, icon:'👸'}, 
-    {id:'goblin', name:'Gobelin', cost:15000000, type:'coin', rate:3.0, icon:'😈'}, 
-    {id:'dragon', name:'Dragon', cost:100000000, type:'coin', rate:5.0, icon:'🐉'},         
-    {id:'archmage', name:'Archimage', cost:175000000, type:'coin', rate:4.5, icon:'🌌'},     
-    {id:'priestess', name:'Grande prêtresse', cost:210000000, type:'potion', rate:4.0, icon:'🙏'}, 
-    {id:'demonlord', name:'Seigneur démon', cost:325000000, type:'coin', rate:8.0, icon:'👹'}, 
-    {id:'titan', name:'Titan', cost:450000000, type:'potion', rate:10.0, icon:'🗿'}, // Quête Maxime
-    {id:'angel', name:'Ange', cost:600000000, type:'coin', rate:15.0, icon:'😇'},           
-    {id:'elfqueen', name:'Reine elfe', cost:800000000, type:'potion', rate:18.0, icon:'🧝‍♀️'},  
-    {id:'demigod', name:'Demi-Dieu', cost:1000000000, type:'coin', rate:25.0, icon:'🪐'}, 
-    {id:'hero', name:'Héros Légendaire', cost:1500000000, type:'potion', rate:30.0, icon:'🛡️'}, 
-    {id:'cosmic_entity', name:'Entité Cosmique', cost:3000000000, type:'coin', rate:40.0, icon:'✨'}, 
+    {id:'assassin', name:'Assassin', cost:5000000, type:'coin', rate:1.0, icon:'🔪'}, // P: Pièce, C: Potion
+    {id:'king', name:'Roi', cost:10000000, type:'coin', rate:2.0, icon:'👑'}, // P: Pièce, C: Potion
+    {id:'queen', name:'Reine', cost:12000000, type:'potion', rate:2.5, icon:'👸'}, // P: Potion, C: Pièce
+    {id:'goblin', name:'Gobelin', cost:15000000, type:'coin', rate:3.0, icon:'😈'}, // P: Pièce, C: Potion
+    {id:'dragon', name:'Dragon', cost:100000000, type:'coin', rate:5.0, icon:'🐉'}, // P: Pièce, C: Potion
+    {id:'archmage', name:'Archimage', cost:175000000, type:'coin', rate:4.5, icon:'🌌'}, // P: Pièce, C: Potion
+    {id:'priestess', name:'Grande prêtresse', cost:210000000, type:'potion', rate:4.0, icon:'🙏'}, // P: Potion, C: Pièce
+    {id:'demonlord', name:'Seigneur démon', cost:325000000, type:'coin', rate:8.0, icon:'👹'}, // P: Pièce, C: Potion
+    {id:'titan', name:'Titan', cost:450000000, type:'potion', rate:10.0, icon:'🗿'}, // P: Potion, C: Pièce
+    {id:'angel', name:'Ange', cost:600000000, type:'coin', rate:15.0, icon:'😇'}, // P: Pièce, C: Potion
+    {id:'elfqueen', name:'Reine elfe', cost:800000000, type:'potion', rate:18.0, icon:'🧝‍♀️'}, // P: Potion, C: Pièce
+    {id:'demigod', name:'Demi-Dieu', cost:1000000000, type:'coin', rate:25.0, icon:'🪐'}, // P: Pièce, C: Potion
+    {id:'hero', name:'Héros Légendaire', cost:1500000000, type:'potion', rate:30.0, icon:'🛡️'}, // P: Potion, C: Pièce
+    {id:'cosmic_entity', name:'Entité Cosmique', cost:3000000000, type:'coin', rate:40.0, icon:'✨'}, // P: Pièce, C: Potion
     // MODIFIÉ V21: Ordre changé pour que Quentin soit le dernier et le meilleur
-    {id:'ethereal_weaver', name:'Tisseur Éthéré', cost:10000000000, type:'coin', rate:80.0, icon:'🕸️'},
-    {id:'void_prophet', name:'Prophète du Vide', cost:25000000000, type:'potion', rate:120.0, icon:'👁️'},
-    {id:"star_forger", name:"Forgeron d'Étoiles", cost:5000000000, type:"potion", rate:50.0, icon:"🌠"}, // Ancien 'Quentin'
-    {id:'quentin', name:'Être Supérieur (Quentin)', cost:50000000000, type:'coin', rate:150.0, icon:'⭐'}, // Ancien 'Star Forger'
+    {id:'ethereal_weaver', name:'Tisseur Éthéré', cost:10000000000, type:'coin', rate:80.0, icon:'🕸️'}, // P: Pièce, C: Potion
+    {id:'void_prophet', name:'Prophète du Vide', cost:25000000000, type:'potion', rate:120.0, icon:'👁️'}, // P: Potion, C: Pièce
+    {id:"star_forger", name:"Forgeron d'Étoiles", cost:5000000000, type:"potion", rate:50.0, icon:"🌠"}, // P: Potion, C: Pièce
+    {id:'quentin', name:'Être Supérieur (Quentin)', cost:50000000000, type:'coin', rate:150.0, icon:'⭐'}, // P: Pièce, C: Potion
 ];
 const buildings = [ {id:'hut', name:'Maisonnette', cost:1000000, rate:2, icon:'🏠'}, {id:'farm', name:'Ferme', cost:2500000, rate:5, icon:'🌾'}, {id:'mine', name:'Mine Naine', cost:5000000, rate:10, icon:'⛏️'}, {id:'manor', name:'Manoir', cost:10000000, rate:20, icon:'🏰'}, {id:'keep', name:'Donjon', cost:20000000, rate:40, icon:'🛡️'}, ];
 const knowledge_buildings = [ {id:'library', name:'Bibliothèque', cost:50000000, rate:0.1, icon:'📚'}, {id:'academy', name:'Académie', cost:500000000, rate:1.0, icon:'🏛️'}, {id:'ancient_archives', name:'Archives Antiques', cost:5000000000, rate:5.0, icon:'📜'}, ];
@@ -1203,7 +1204,26 @@ function checkQuests() {
 
 
 // --- Fonctions de Rendu (Statiques) ---
-function checkAutoAcquisitionCharacters() { let acquired = false; characters.forEach(c => { const owned = state.characters[c.id] || 0; const resource = c.type === 'coin' ? state.coins : state.potions; if (owned === 0 && resource >= c.cost) { state.characters[c.id] = 1; log(`✨ Nouveau Palier atteint! ${c.name} est maintenant dans votre équipe.`); acquired = true; } }); if (acquired) { renderShop(); } }
+function checkAutoAcquisitionCharacters() { 
+    let acquired = false; 
+    characters.forEach(c => { 
+        const owned = state.characters[c.id] || 0; 
+        
+        // MODIFICATION : Le coût est l'inverse du type de production
+        // Si type='coin' (produit pièce), resource = state.potions (coûte potion)
+        // Si type='potion' (produit potion), resource = state.coins (coûte pièce)
+        const resource = c.type === 'coin' ? state.potions : state.coins; 
+        
+        if (owned === 0 && resource >= c.cost) { 
+            state.characters[c.id] = 1; 
+            log(`✨ Nouveau Palier atteint! ${c.name} est maintenant dans votre équipe.`); 
+            acquired = true; 
+        } 
+    }); 
+    if (acquired) { 
+        renderShop(); 
+    } 
+}
 function checkAutoAcquisitionBuildings() { let bought = false; buildings.forEach(b => { const cost = b.cost; while (state.potions >= cost) { state.potions -= cost; state.buildings[b.id] = state.buildings[b.id] || {count: 0}; state.buildings[b.id].count += 1; bought = true; } }); knowledge_buildings.forEach(b => { const cost = b.cost; while (state.potions >= cost) { state.potions -= cost; state.knowledge_buildings[b.id] = state.knowledge_buildings[b.id] || {count: 0}; state.knowledge_buildings[b.id].count += 1; bought = true; } }); if (bought) { renderStats(); renderBuildingShop(); renderKnowledgeBuildings(); } }
 function calculateUnlocks() { 
     let unlockedCount = 0; 
@@ -1221,7 +1241,43 @@ function calculateUnlocks() {
     return { progress, percentage }; 
 }
 function updateEvolution() { const { percentage } = calculateUnlocks(); const fill = document.getElementById('progress-bar-fill'); const percentText = document.getElementById('progress-percent'); const characterIcon = document.getElementById('evolution-character'); fill.style.width = percentage.toFixed(2) + '%'; percentText.textContent = `${percentage.toFixed(0)}%`; let currentStage = EVOLUTION_STAGES[0]; for (const stage of EVOLUTION_STAGES) { if (percentage >= stage.threshold) { currentStage = stage; } } characterIcon.textContent = currentStage.icon; characterIcon.title = `Statut actuel: ${currentStage.name}`; return percentage; }
-function renderShop(){ const shop=document.getElementById('shop'); shop.innerHTML=''; characters.forEach(c=>{ const owned = state.characters[c.id] || 0; const currentRate = c.rate; const isAcquired = owned === 1; const resourceIcon = c.type === 'coin' ? '💰' : '🧪'; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = c.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${c.name}</h3><div class="desc">Taux fixe: ${fmt(currentRate)} ${c.type}/sec</div><div class="desc">Possédé: ${isAcquired ? 'Oui' : 'Non'}</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyBtn=document.createElement('button'); if (isAcquired) { buyBtn.textContent = 'Obtenu'; buyBtn.disabled = true; buyBtn.className = 'obtained'; buyBtn.title = `Déverrouillé au palier de ${fmt(c.cost)} pièces.`; } else { buyBtn.textContent = `Palier: ${fmt(c.cost)} ${resourceIcon}`; buyBtn.disabled = true; buyBtn.title = `Atteignez ce montant de ressources pour déverrouiller AUTOMATIQUEMENT.`; } actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card); }); }
+function renderShop(){ 
+    const shop=document.getElementById('shop'); 
+    shop.innerHTML=''; 
+    characters.forEach(c=>{ 
+        const owned = state.characters[c.id] || 0; 
+        const currentRate = c.rate; 
+        const isAcquired = owned === 1; 
+        
+        // MODIFICATION : L'icône du coût est l'inverse de l'icône de production
+        const costResourceIcon = c.type === 'coin' ? '🧪' : '💰'; // Coût (inversé)
+        const productionResourceName = c.type === 'coin' ? 'pièces' : 'potions'; // Production (normal)
+        
+        const card=document.createElement('div'); card.className='card'; 
+        const content = document.createElement('div'); content.className = 'card-content'; 
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = c.icon; content.appendChild(icon); 
+        const details = document.createElement('div'); 
+        
+        // MODIFICATION : Description mise à jour pour refléter la Production vs Coût
+        details.innerHTML=`<h3>${c.name}</h3><div class="desc">Produit: ${fmt(currentRate)} ${productionResourceName}/sec</div><div class="desc">Possédé: ${isAcquired ? 'Oui' : 'Non'}</div>`; 
+        
+        content.appendChild(details); card.appendChild(content); 
+        const actions=document.createElement('div'); actions.className = 'card-actions'; 
+        const buyBtn=document.createElement('button'); 
+        if (isAcquired) { 
+            buyBtn.textContent = 'Obtenu'; 
+            buyBtn.disabled = true; 
+            buyBtn.className = 'obtained'; 
+            buyBtn.title = `Déverrouillé au palier de ${fmt(c.cost)} ${costResourceIcon}.`; // Affiche le bon coût
+        } else { 
+            // MODIFICATION : Affiche l'icône de la ressource de COÛT (inversée)
+            buyBtn.textContent = `Palier: ${fmt(c.cost)} ${costResourceIcon}`; 
+            buyBtn.disabled = true; 
+            buyBtn.title = `Atteignez ce montant de la ressource DE COÛT (${costResourceIcon}) pour déverrouiller AUTOMATIQUEMENT.`; 
+        } 
+        actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card); 
+    }); 
+}
 function renderBuildingShop(){ const shop=document.getElementById('buildingShop'); shop.innerHTML=''; buildings.forEach(b=>{ const owned = state.buildings[b.id] ? state.buildings[b.id].count : 0; const currentRate = b.rate * owned; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = b.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${b.name}</h3><div class="desc">Production: ${fmt(currentRate)} pièces/sec</div><div class="desc">Possédé: ${owned} (Taux unitaire: ${b.rate}/sec)</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyInfo = document.createElement('div'); buyInfo.className = 'building-auto-info'; buyInfo.textContent = `Achat auto à ${fmt(b.cost)} 🧪`; actions.appendChild(buyInfo); card.appendChild(actions); shop.appendChild(card); }); }
 function renderKnowledgeBuildings(){ const shop=document.getElementById('knowledgeBuildingShop'); shop.innerHTML=''; knowledge_buildings.forEach(b=>{ const owned = state.knowledge_buildings[b.id] ? state.knowledge_buildings[b.id].count : 0; const currentRate = b.rate * owned; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = b.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${b.name}</h3><div class="desc">Production: ${fmt(currentRate)} Savoir/sec</div><div class="desc">Possédé: ${owned} (Taux unitaire: ${b.rate}/sec)</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyInfo = document.createElement('div'); buyInfo.className = 'building-auto-info'; buyInfo.textContent = `Achat auto à ${fmt(b.cost)} 🧪`; actions.appendChild(buyInfo); card.appendChild(actions); shop.appendChild(card); }); }
 
@@ -1232,7 +1288,7 @@ function computePerSec(){
     let totalEntities = 0;
     let totalPurificationRate = 0;
     
-    // 1. Production de BASE et Entités
+    // 1. Production de BASE et Entités (Cette logique reste inchangée, 'type' définit la production)
     for(const c of characters){ const owned=state.characters[c.id]||0; if(owned > 0) { const gain=c.rate; if(c.type==='coin') coinPerSecBase+=gain; else potionPerSecBase+=gain; totalEntities += 1; } }
     for(const b of buildings){ const buildingState = state.buildings[b.id]; if (buildingState && buildingState.count > 0) { const count = buildingState.count; coinPerSecBase += b.rate * count; totalEntities += count; } }
     for(const b of knowledge_buildings){ const buildingState = state.knowledge_buildings[b.id]; if (buildingState && buildingState.count > 0) { const count = buildingState.count; knowledgePerSec += b.rate * count; totalEntities += count; } }
