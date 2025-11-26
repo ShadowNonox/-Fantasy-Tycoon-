@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fantasy Tycoon – V24 Dépliant de Règles</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+        
+        /* --- Styles Généraux --- */
+        body { 
+            font-family: 'Cinzel', serif; 
+            background: linear-gradient(135deg, #1f1c2c, #09090c); 
+            color: #f0e6d6; 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        header { 
+            text-align: center; 
+            padding: 30px 20px 20px; 
+            background: rgba(0, 0, 0, 0.4); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #5a0000;
+            position: sticky; 
+            top: 0;           
+            z-index: 1000;    
+        }
+        h1 { 
+            color: #ffcc00; 
+            font-size: 2.5em; 
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
+            margin: 0; 
+        }
+        .signature {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.9em;
+            color: #ccc; 
+            font-weight: 400;
+        }
+
+        /* --- Stats Bar --- */
+        .stats { 
+            display: flex; 
+            justify-content: center; 
+            gap: 25px; 
+            margin-top: 20px; 
+            flex-wrap: wrap; 
+        }
+        .stat { 
+            background: rgba(40, 40, 50, 0.7); 
+            padding: 12px 25px; 
+            border-radius: 15px;
+            border: 1px solid #444;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            font-size: 1.1em;
+            color: #c8c8c8;
+        }
+        .stat span {
+            color: #76e8ff; 
+            font-weight: bold;
+        }
+        #corruptionStat {
+            background: rgba(80, 0, 0, 0.7);
+            border: 1px solid #ff4444;
+        }
+        #corruptionStat span { color: #ff8888; }
+        #knowledgeStat span { color: #ffcc00; }
+        #fragmentsStat span { color: #9b5de5; }
+        #coresStat span { color: #3498db; }
+        
+        /* Bannière d'Événement Aléatoire */
+        #event-banner {
+            display: none; 
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            z-index: 999; 
+            border-bottom: 2px solid #000;
+            position: sticky;
+            top: 178px; 
+        }
+        .event-positive {
+            background: linear-gradient(45deg, #ffcc00, #b8860b);
+            color: #111;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+        }
+        .event-negative {
+            background: linear-gradient(45deg, #a00000, #5a0000);
+            color: #f0e6d6;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* --- Contenu Principal & Structure de la page --- */
+        main { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+            padding: 30px; 
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .main-content-flex { display: flex; gap: 30px; width: 100%; }
+        section { 
+            background: rgba(20, 20, 30, 0.8); 
+            padding: 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+        }
+        #left-panel { flex: 1.2; }
+        #right-panel { flex: 0.8; }
+        #bottom-panel { flex-basis: 100%; }
+
+        h2 { 
+            color: #e8a03b; 
+            border-bottom: 2px solid #3d3d5f;
+            padding-bottom: 10px;
+            margin-top: 20px; 
+            font-size: 1.5em;
+        }
+        #left-panel h2:first-of-type, #right-panel h2:first-of-type, #bottom-panel h2:first-of-type {
+            margin-top: 0;
+        }
+        
+        /* --- Styles pour l'Évolution --- */
+        #evolution-panel { flex-basis: 100%; margin-bottom: -15px; }
+        #evolution-container { display: flex; align-items: center; gap: 20px; margin-top: 10px; }
+        #evolution-character { font-size: 4em; min-width: 60px; text-align: center; transition: transform 0.3s ease-out; }
+        #evolution-character:hover { transform: scale(1.1); }
+        #progress-bar-container { flex-grow: 1; height: 30px; background-color: #555; border-radius: 15px; overflow: hidden; border: 2px solid #e8a03b; }
+        #progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #2ecc71, #3498db); transition: width 0.5s ease-out; }
+        #progress-percent { color: #76e8ff; font-weight: bold; }
+        
+        /* --- Boutons & Cartes --- */
+        .big-btn { background: linear-gradient(0deg, #9b5de5, #b8860b); border: none; color: white; padding: 25px; font-size: 26px; border-radius: 15px; cursor: pointer; width: 100%; margin-bottom: 15px; text-shadow: 1px 1px 2px #000; transition: background 0.2s, transform 0.1s; }
+        .big-btn:hover:not(:disabled) { background: linear-gradient(0deg, #b8860b, #9b5de5); transform: translateY(-2px); }
+        .big-btn:disabled { background: #555; color: #aaa; cursor: not-allowed; box-shadow: none; }
+        
+        /* Style spécifique pour le Bouton Prestige */
+        .prestige-btn {
+            background: linear-gradient(45deg, #4b0082, #e8a03b); 
+            border: 3px solid #ffcc00; 
+            font-size: 20px;
+        }
+        .prestige-btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #e8a03b, #4b0082); 
+        }
+        .prestige-btn:disabled { 
+            background: #555; 
+            border: 3px solid #777;
+        }
+        
+        button { background: #4c4c9d; border: none; color: white; padding: 10px 18px; border-radius: 8px; cursor: pointer; margin-top: 6px; margin-left: 5px; font-family: Arial, sans-serif; transition: background 0.2s; }
+        button:hover:not(:disabled) { background: #6a6ad8; }
+        button:disabled { background: #3a3a4c; color: #888; cursor: not-allowed; }
+        .card button.obtained { background: #2ecc71; color: black; font-weight: bold; cursor: default; }
+        .card button.obtained:hover { background: #2ecc71; }
+        
+        /* Cartes */
+        .card { background: #333; padding: 15px; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #444; transition: background 0.2s; }
+        .card:hover { background: #3a3a3a; }
+        .card-content { display: flex; align-items: center; }
+        .card-icon { font-size: 3em; margin-right: 15px; color: #ffcc00; text-shadow: 0 0 5px rgba(255, 204, 0, 0.4); }
+        .card h3 { margin: 0 0 5px 0; color: #76e8ff; font-size: 1.2em; }
+        .desc { font-size: 0.9em; color: #aaa; margin-top: 2px; }
+        .card-actions { display: flex; gap: 5px; }
+        .building-auto-info { font-size: 0.9em; color: #f39c12; font-weight: bold; text-align: right; padding-right: 15px; }
+        
+        /* Styles spécifiques aux boutiques */
+        #godShop .card { border: 2px solid #ffcc00; }
+        #templeShop .card { border: 2px solid #9b5de5; }
+        #templeShop button { background: #9b5de5; }
+        #templeShop button:hover:not(:disabled) { background: #b8860b; }
+        .god-max-level { background: rgba(46, 204, 113, 0.2); border: 2px solid #2ecc71 !important; }
+        #researchTree .card { border: 2px solid #3498db; }
+        #researchTree button { background: #3498db; }
+        #researchTree button:hover:not(:disabled) { background: #5dade2; }
+        
+        /* Style pour les améliorations de Prestige */
+        #fragmentsShop .card { border: 2px solid #9b5de5; }
+        #fragmentsShop button { background: #9b5de5; }
+        #fragmentsShop button:hover:not(:disabled) { background: #b8860b; }
+        .fragment-upgrade-purchased {
+            background: rgba(155, 93, 229, 0.2);
+            border: 2px solid #9b5de5 !important;
+        }
+        
+        /* Style pour la Forge d'Artéfacts */
+        #artifactForge {
+            text-align: center;
+        }
+        .craft-btn {
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            border: 2px solid #76e8ff;
+            color: white;
+            padding: 20px;
+            font-size: 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 80%;
+            margin: 10px auto 30px;
+            font-family: 'Cinzel', serif;
+        }
+        .craft-btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+        .craft-btn:disabled {
+            background: #555;
+            border-color: #777;
+            cursor: not-allowed;
+        }
+        .craft-btn .desc {
+            font-size: 0.7em;
+            color: #ddd;
+        }
+        
+        #artifactShop .card { border: 2px solid #3498db; }
+        #artifactShop button { background: #3498db; }
+        #artifactShop button:hover:not(:disabled) { background: #5dade2; }
+        .artifact-purchased {
+            background: rgba(52, 152, 219, 0.2);
+            border: 2px solid #3498db !important;
+        }
+
+
+        /* --- Journal & Timer --- */
+        #log { height: 150px; overflow-y: auto; background: #111; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.9em; border: 1px solid #444; }
+        #log div { padding: 2px 0; }
+        #gemTimer { margin: 15px 0; color: #ffcc00; font-size: 1.1em; font-weight: bold; }
+        
+        /* Style du Livre de Quêtes */
+        #questLog {
+            height: 200px;
+            overflow-y: auto;
+            background: #111;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .quest-card {
+            background: #2a2a3a;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border-left: 5px solid #e8a03b;
+            transition: background 0.3s;
+        }
+        .quest-card h4 {
+            margin: 0 0 5px 0;
+            color: #76e8ff;
+        }
+        .quest-card .desc {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .quest-card .quest-reward {
+            font-size: 0.9em;
+            color: #ffcc00;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .quest-completed {
+            background: #222;
+            border-left: 5px solid #2ecc71;
+            color: #888;
+        }
+        .quest-completed h4 {
+            color: #888;
+            text-decoration: line-through;
+        }
+        .quest-completed .desc {
+            color: #666;
+        }
+        .quest-completed .quest-reward {
+            color: #2ecc71;
+            text-decoration: none;
+        }
+        
+        /* --- Styles pour le dépliant de Règles (V24) --- */
+        #rules-details {
+            margin-top: 20px;
+            border: none;
+            padding: 0;
+        }
+        .rules-summary {
+            color: #e8a03b; 
+            border-bottom: 2px solid #3d3d5f;
+            padding-bottom: 10px;
+            margin-top: 0; 
+            font-size: 1.5em;
+            cursor: pointer;
+            list-style: none;
+            display: block; 
+            padding-left: 0;
+        }
+        /* Ajout d'une flèche personnalisée pour indiquer l'état */
+        .rules-summary::before {
+            content: '▶ ';
+            color: #ffcc00;
+            font-size: 0.8em;
+            margin-right: 5px;
+            transition: transform 0.2s ease-in-out;
+        }
+        #rules-details[open] > .rules-summary::before {
+            content: '▼ ';
+        }
+        .rules-summary::-webkit-details-marker {
+            display: none; 
+        }
+
+        /* Style du contenu du dépliant */
+        #rules-panel {
+            background: #1e1e30; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border: 2px solid #5a5a8a; 
+            margin-top: 10px; 
+            margin-bottom: 0;
+        }
+        #rules-panel p {
+            margin-top: 0;
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        #rules-panel ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 5px;
+        }
+        #rules-panel li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        #rules-panel li strong {
+            color: #ffcc00;
+        }
+        
+        /* --- Responsiveness --- */
+        @media (max-width: 1200px) {
+            main { flex-direction: column; }
+            .stats { gap: 10px; }
+            .signature { top: 5px; right: 5px; font-size: 0.7em; }
+            #evolution-panel { flex-basis: auto; margin-bottom: 10px; }
+            .main-content-flex { flex-direction: column; }
+            section { width: 100%; }
+            header { position: relative; } 
+            #event-banner { position: relative; top: 0; } 
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="signature">by Quentin</div>
+    
+    <h1>⚔️ Fantasy Tycoon ⚗️</h1>
+    <div class="stats">
+        <div class="stat">💰 Pièces: <span id="coins">0</span></div>
+        <div class="stat">🧪 Potions: <span id="potions">0</span></div>
+        <div class="stat">💎 Gemmes: <span id="gems">0</span></div>
+        <div class="stat" id="knowledgeStat">📜 Savoir: <span id="knowledge">0</span></div>
+        <div class="stat" id="fragmentsStat">💫 Fragments Cosmiques: <span id="fragments">0</span></div>
+        <div class="stat" id="coresStat">💠 Noyaux Arcaniques: <span id="arcaneCores">0</span></div>
+        <div class="stat" id="corruptionStat">💀 Corruption: <span id="corruption">0%</span></div>
+        <div class="stat">📈 Pièces/sec: <span id="cps">0</span></div>
+        <div class="stat">⚗️ Potions/sec: <span id="pps">0</span></div>
+        <div class="stat">📜 Savoir/sec: <span id="kps">0</span></div>
+    </div>
+</header>
+
+<div id="event-banner"></div>
+
+<main>
+    <section id="evolution-panel">
+        <h2>Progression du Magnat : <span id="progress-percent">0%</span></h2>
+        <div id="evolution-container">
+            <div id="evolution-character">🦧</div>
+            <div id="progress-bar-container">
+                <div id="progress-bar-fill"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-content-flex">
+        <section id="left-panel">
+            <h2>Actions & Outils</h2>
+            <button id="clickBtn" class="big-btn">✨ Cliquer (+1 pièce)</button>
+            <button id="autoclickBtn">Auto‑clicker (200 gemmes)</button>
+            
+            <div id="prestigeContainer"></div>
+            
+            <button id="saveBtn">💾 Sauvegarder</button>
+            <button id="loadBtn">📥 Charger</button>
+            
+            <details id="rules-details" open>
+                <summary class="rules-summary">📜 Règles du Jeu</summary>
+                <div id="rules-panel">
+                    <p>Bienvenue dans Fantasy Tycoon ! Voici les éléments clés :</p>
+                    <ul>
+                        <li>💰 **Pièces & 🧪 Potions** : Les devises principales. Les personnages produisent l'une ou l'autre.</li>
+                        <li>💎 **Gemmes** : Obtenues avec le temps (timer). Utilisées pour les améliorations Divines (multiplicateurs) et l'Auto-clicker.</li>
+                        <li>📜 **Savoir** : Produit par les Bâtiments de Savoir. Utilisé pour l'Arbre de Recherche (bonus permanents).</li>
+                        <li>💀 **Corruption** : Augmente avec le nombre d'unités (Personnages/Bâtiments/Temples). Réduit la production de Pièces et Potions. Doit être combattue avec les **Temples de Purification**.</li>
+                        <li>💫 **Prestige (Fragments)** : Débloqué via la Recherche. Permet de réinitialiser la progression contre des Fragments Cosmiques pour des bonus permanents.</li>
+                    </ul>
+                    <p>Le **déverrouillage** des personnages et bâtiments est **AUTOMATIQUE** dès que vous atteignez le coût requis dans la ressource correspondante.</p>
+                </div>
+            </details>
+            
+            <div id="gemTimer">⏳ Prochaine gemme dans: 10:00</div>
+            
+            <h2>Journal d'activité</h2>
+            <div id="log"></div>
+            
+            <h2 style="margin-top: 30px;">📖 Livre de Quêtes</h2>
+            <div id="questLog">
+                </div>
+            
+            <h2 style="margin-top: 30px;">Boutique des Dieux Élémentaires (Multiplicateurs)</h2>
+            <div id="godShop"></div>
+            
+            <h2 style="margin-top: 30px;">Temples de Purification (Anti-Corruption)</h2>
+            <div id="templeShop"></div>
+
+            <h2 style="margin-top: 30px;">Boutique de Bâtiments (Auto-Achat par Potions)</h2>
+            <div id="buildingShop"></div>
+            
+            <h2 style="margin-top: 30px;">Bâtiments de Savoir (Auto-Achat par Potions)</h2>
+            <div id="knowledgeBuildingShop"></div>
+        </section>
+
+        <section id="right-panel">
+            <h2>Boutique de personnages (Auto-Déblocage par Pièces)</h2>
+            <div id="shop"></div>
+        </section>
+    </div>
+    
+    <section id="bottom-panel">
+         <h2>Le Grand Savoir : Arbre de Recherche (Améliorations Permanentes)</h2>
+         <div id="researchTree"></div>
+         
+         <h2 style="margin-top: 30px;">Améliorations Cosmiques (Achat par Fragments 💫)</h2>
+         <div id="fragmentsShop"></div>
+         
+         <h2 style="margin-top: 30px;">La Forge des Arcanes (Artéfacts Permanents)</h2>
+         <div id="artifactForge">
+             </div>
+         <div id="artifactShop">
+             </div>
+    </section>
+</main>
+
+<script>
+// --- Helper: Donne un temps aléatoire pour la prochaine vérification d'événement ---
+function getRandomEventCheckTime() { return Math.random() * 120 + 180; }
+
+// --- État initial du jeu ---
+const state = { 
+    coins:0, potions:0, gems:0, knowledge: 0, 
+    fragmentsCosmiques: 0, 
+    totalLifetimeCoins: 0, 
+    totalLifetimePotions: 0, 
+    fragments_upgrades: {}, 
+    
+    // V19
+    arcaneCores: 0,
+    artifacts: {},
+    
+    // V20
+    quests: {}, // Stocke les ID des quêtes terminées
+    
+    // MODIFIÉ V19/V20
+    corruption: 1, 
+    corruptionActive: true, 
+    
+    characters:{}, buildings:{}, gods:{}, temples:{}, 
+    knowledge_buildings: {}, research: {}, 
+    autoClickActive:false, gemTimer:600,
+    
+    // Gestion des Événements
+    eventCheckTimer: getRandomEventCheckTime(),
+    randomEvent: { active: false, type: null, duration: 0, message: '' },
+}; 
+
+// --- Définitions des Événements ---
+const RANDOM_EVENTS = [
+    { id: 'blessing', message: 'Bénédiction Divine ! Production x5 pendant 60 secondes !', duration: 60, type: 'positive', weight: 1 },
+    { id: 'mine', message: 'Découverte de Mine ! Gain instantané de 100 Gemmes !', duration: 5, type: 'positive', weight: 2 },
+    { id: 'goblins', message: 'Invasion de Gobelins ! Production de Pièces -50% pendant 120 secondes !', duration: 120, type: 'negative', weight: 5 },
+    { id: 'contamination', message: 'Contamination ! La Corruption augmente rapidement pendant 30 secondes !', duration: 30, type: 'negative', weight: 4 }
+];
+
+// --- Définitions des entités (Personnages, Bâtiments, Dieux, etc.) ---
+const characters = [ 
+    // MODIFIÉ V22: Coûts réduits pour un démarrage plus rapide (X100 pour les 3 premiers, X10 pour les 4e et 5e)
+    {id:'apprentice', name:'Apprenti', cost:500, type:'potion', rate:0.1, icon:'🧑‍🎓'}, // 50000 -> 500
+    {id:'alchemist', name:'Alchimiste', cost:1000, type:'potion', rate:0.3, icon:'⚗️'}, // 100000 -> 1000
+    {id:'mage', name:'Mage', cost:5000, type:'coin', rate:0.2, icon:'🧙'}, // 500000 -> 5000
+    {id:'warrior', name:'Guerrier', cost:100000, type:'coin', rate:0.4, icon:'⚔️'}, // 1000000 -> 100000
+    {id:'beastman', name:'Homme-bête', cost:300000, type:'potion', rate:0.8, icon:'🦹'}, // 3000000 -> 300000
+    
+    // Reste inchangé
+    {id:'assassin', name:'Assassin', cost:5000000, type:'coin', rate:1.0, icon:'🔪'}, 
+    {id:'king', name:'Roi', cost:10000000, type:'coin', rate:2.0, icon:'👑'}, 
+    {id:'queen', name:'Reine', cost:12000000, type:'potion', rate:2.5, icon:'👸'}, 
+    {id:'goblin', name:'Gobelin', cost:15000000, type:'coin', rate:3.0, icon:'😈'}, 
+    {id:'dragon', name:'Dragon', cost:100000000, type:'coin', rate:5.0, icon:'🐉'},         
+    {id:'archmage', name:'Archimage', cost:175000000, type:'coin', rate:4.5, icon:'🌌'},     
+    {id:'priestess', name:'Grande prêtresse', cost:210000000, type:'potion', rate:4.0, icon:'🙏'}, 
+    {id:'demonlord', name:'Seigneur démon', cost:325000000, type:'coin', rate:8.0, icon:'👹'}, 
+    {id:'titan', name:'Titan', cost:450000000, type:'potion', rate:10.0, icon:'🗿'}, // Quête Maxime
+    {id:'angel', name:'Ange', cost:600000000, type:'coin', rate:15.0, icon:'😇'},           
+    {id:'elfqueen', name:'Reine elfe', cost:800000000, type:'potion', rate:18.0, icon:'🧝‍♀️'},  
+    {id:'demigod', name:'Demi-Dieu', cost:1000000000, type:'coin', rate:25.0, icon:'🪐'}, 
+    {id:'hero', name:'Héros Légendaire', cost:1500000000, type:'potion', rate:30.0, icon:'🛡️'}, 
+    {id:'cosmic_entity', name:'Entité Cosmique', cost:3000000000, type:'coin', rate:40.0, icon:'✨'}, 
+    // MODIFIÉ V21: Ordre changé pour que Quentin soit le dernier et le meilleur
+    {id:'ethereal_weaver', name:'Tisseur Éthéré', cost:10000000000, type:'coin', rate:80.0, icon:'🕸️'},
+    {id:'void_prophet', name:'Prophète du Vide', cost:25000000000, type:'potion', rate:120.0, icon:'👁️'},
+    {id:"star_forger", name:"Forgeron d'Étoiles", cost:5000000000, type:"potion", rate:50.0, icon:"🌠"}, // Ancien 'Quentin'
+    {id:'quentin', name:'Être Supérieur (Quentin)', cost:50000000000, type:'coin', rate:150.0, icon:'⭐'}, // Ancien 'Star Forger'
+];
+const buildings = [ {id:'hut', name:'Maisonnette', cost:1000000, rate:2, icon:'🏠'}, {id:'farm', name:'Ferme', cost:2500000, rate:5, icon:'🌾'}, {id:'mine', name:'Mine Naine', cost:5000000, rate:10, icon:'⛏️'}, {id:'manor', name:'Manoir', cost:10000000, rate:20, icon:'🏰'}, {id:'keep', name:'Donjon', cost:20000000, rate:40, icon:'🛡️'}, ];
+const knowledge_buildings = [ {id:'library', name:'Bibliothèque', cost:50000000, rate:0.1, icon:'📚'}, {id:'academy', name:'Académie', cost:500000000, rate:1.0, icon:'🏛️'}, {id:'ancient_archives', name:'Archives Antiques', cost:5000000000, rate:5.0, icon:'📜'}, ];
+const gods = [ {id:'god_fire', name:'Dieu du Feu (Volcanos)', base_cost:500, type:'coin', base_mult: 2.0, icon:'🔥'}, {id:'god_water', name:'Déesse de l\'Eau (Océan)', base_cost:500, type:'potion', base_mult: 2.0, icon:'🌊'}, {id:'god_earth', name:'Titan de la Terre (Montagnes)', base_cost:1000, type:'coin', base_mult: 3.0, icon:'⛰️'}, {id:'god_wind', name:'Esprit du Vent (Tempêtes)', base_cost:1000, type:'potion', base_mult: 3.0, icon:'💨'}, {id:'god_light', name:'Divinité de la Lumière (Ascension)', base_cost:5000, type:'both', base_mult: 5.0, icon:'✨'}, {id:'god_lightning', name:'Dieu de la Foudre (Olympe)', base_cost:10000, type:'coin', base_mult: 8.0, icon:'⚡️'}, ];
+const MAX_GOD_LEVEL = 3;
+const purification_temples = [ {id:'small_altar', name:'Petit Autel', coin_cost: 500000, potion_cost: 10000, purification_rate: 0.005, icon:'🕯️'}, {id:'village_shrine', name:'Sanctuaire Villageois', coin_cost: 5000000, potion_cost: 100000, purification_rate: 0.05, icon:'🕍'}, {id:'grand_temple', name:'Grand Temple Royal', coin_cost: 50000000, potion_cost: 1000000, purification_rate: 0.5, icon:'🏛️'}, {id:'ancient_temple', name:'Temple des Anciens', coin_cost: 250000000, potion_cost: 5000000, gem_cost: 50, purification_rate: 2.0, icon:'🔱'}, ];
+
+const research_nodes = [ 
+    {id:'alchemy_base', name:'Base Alchimique', cost:250, type:'knowledge', effect_type:'potion_mult', value:1.2, desc:'Augmente la production de Potions de 20%.', icon:'🧪'}, 
+    {id:'gem_efficiency', name:'Efficacité Gemme', cost:500, type:'knowledge', effect_type:'gem_speed_mult', value:0.5, desc:'Double la vitesse de production des Gemmes (réduit le timer de moitié).', icon:'💎'}, 
+    {id:'coin_optimization', name:'Optimisation Pièces', cost:2500, type:'knowledge', effect_type:'coin_mult', value:1.3, desc:'Augmente la production de Pièces de 30%.', icon:'💰'}, 
+    {id:'corruption_shield', name:'Bouclier Corruption', cost:5000, type:'knowledge', effect_type:'corruption_resistance', value:0.9, desc:'Réduit l\'impact négatif de la Corruption de 10% (Malus appliqué est x0.9).', icon:'🛡️'}, 
+    {id:'artifact_forge', name:'Portail Dimensionnel', cost:10000, type:'knowledge', effect_type:'info_only', value:1, desc:'Débloque l\'accès à la Faille Cosmique (Prestige).', icon:'🌀'},
+    // NOUVEAU V20
+    {id:'ancient_wisdom', name:'Sagesse Ancienne', cost:25000, type:'knowledge', effect_type:'knowledge_mult', value:1.5, desc:'Augmente toute la production de Savoir de 50%.', icon:'🧠'},
+    {id:'divine_synergy', name:'Synergie Divine', cost:50000, type:'knowledge', effect_type:'god_base_mult_add', value:0.5, desc:'Ajoute +0.5 au multiplicateur de base de tous les Dieux.', icon:'🙌'}
+];
+
+const fragments_upgrades = [
+    {id:'god_boost_1', name:'Harmonie Divine I', cost:10, effect_type:'god_base_mult_add', value:0.2, desc:'Ajoute +0.2 au multiplicateur de base de tous les Dieux.', icon:'✨'},
+    {id:'corruption_start_reduce', name:'Apaisement Initial', cost:25, effect_type:'corruption_initial_mult', value:0.9, desc:'Réduit la Corruption initiale de 10% après chaque Prestige.', icon:'💀'},
+    {id:'gem_speed_boost_1', name:'Flux Temporel I', cost:50, effect_type:'gem_speed_factor_mult', value:0.9, desc:'Accélère la production de Gemmes de 10% de manière permanente.', icon:'⏳'},
+    // NOUVEAU V20
+    {id:'knowledge_flow_1', name:'Flux de Savoir I', cost:100, effect_type:'knowledge_mult', value:2.0, desc:'Double (x2) toute la production de Savoir.', icon:'📜'},
+    {id:'cosmic_understanding', name:'Compréhension Cosmique', cost:250, effect_type:'fragment_gain_mult', value:1.05, desc:'Augmente tous les gains de Fragments Cosmiques de 5%.', icon:'🌌'}
+];
+
+const artifacts = [
+    {id:'artifact_click_mult', name:'Gantelets du Midas', cost: 1, desc:'Multiplie la valeur des clics manuels par 10 (de 1 à 10).', icon:'🧤'},
+    {id:'artifact_autoclick_boost', name:'Rouage d\'Automation', cost: 2, desc:'L\'Auto-clicker produit 5 pièces/sec au lieu de 1.', icon:'⚙️'},
+    {id:'artifact_temple_boost', name:'Sceau de Pureté', cost: 3, desc:'Double (x2) l\'efficacité de tous les Temples de Purification.', icon:'🔱'},
+    {id:'artifact_fragment_boost', name:'Lentille Cosmique', cost: 5, desc:'Augmente tous les gains de Fragments Cosmiques de 10%.', icon:'🔭'},
+    // NOUVEAU V20
+    {id:'quill_of_sages', name:'Plume des Sages', cost: 2, desc:'Double (x2) toute la production de Savoir.', icon:'🖋️'},
+    {id:'core_of_infinity', name:'Cœur de l\'Infini', cost: 5, desc:'Augmente tous les gains de Fragments Cosmiques de 5%.', icon:'💖'}
+];
+const CORE_CRAFT_COST_KNOWLEDGE = 10000;
+const CORE_CRAFT_COST_GEMS = 500;
+
+// NOUVEAU V20: Définition des Quêtes
+const QUESTS = [
+    {
+        id: 'q_coins_1', name: 'Premiers Pas',
+        desc: 'Atteindre 1,000 Pièces.',
+        rewardText: 'Récompense : 10 💎 Gemmes',
+        checkCondition: () => state.coins >= 1000,
+        grantReward: () => { state.gems += 10; }
+    },
+    {
+        id: 'q_potions_1', name: 'Alchimie de Base',
+        desc: 'Produire 10 Potions (via Apprenti/Alchimiste).',
+        rewardText: 'Récompense : 15 💎 Gemmes',
+        checkCondition: () => state.potions >= 10,
+        grantReward: () => { state.gems += 15; }
+    },
+    {
+        id: 'q_apprentice_1', name: 'Débloqué Théo',
+        desc: 'Recruter l\'Apprenti.',
+        rewardText: 'Récompense : 25 💎 Gemmes',
+        checkCondition: () => state.characters.apprentice === 1,
+        grantReward: () => { state.gems += 25; }
+    },
+    // NOUVEAU V21: Quêtes Adam & Maxime
+    {
+        id: 'q_unlock_samuel', 
+        name: 'Débloqué Samuel',
+        desc: 'Recruter Samuel, l\'Alchimiste.',
+        rewardText: 'Récompense : 5 💎 Gemmes',
+        checkCondition: () => state.characters.alchemist === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_florian', 
+        name: 'Débloqué Florian',
+        desc: 'Recruter Florian, le Mage.',
+        rewardText: 'Récompense : 10 💎 Gemmes',
+        checkCondition: () => state.characters.mage === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_gabriel', 
+        name: 'Débloqué Gabriel',
+        desc: 'Recruter Gabriel, le Guerrier.',
+        rewardText: 'Récompense : 20 💎 Gemmes',
+        checkCondition: () => state.characters.warrior === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_adam_beastman', name: 'Débloqué Adam',
+        desc: 'Trouver l\'Homme-bête.',
+        rewardText: 'Récompense : 30 💎 Gemmes',
+        checkCondition: () => state.characters.beastman === 1,
+        grantReward: () => { state.gems += 30; }
+    },
+    {
+        id: 'q_unlock_dimitri', 
+        name: 'Débloqué Dimitri',
+        desc: 'Recruter Dimitri, l\'Assassin.',
+        rewardText: 'Récompense : 40 💎 Gemmes',
+        checkCondition: () => state.characters.assassin === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_martin', 
+        name: 'Débloqué Martin',
+        desc: 'Recruter Martin, le Roi.',
+        rewardText: 'Récompense : 50 💎 Gemmes',
+        checkCondition: () => state.characters.king === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_jeanne', 
+        name: 'Débloqué Jeanne',
+        desc: 'Recruter Jeanne, la Reine.',
+        rewardText: 'Récompense : 60 💎 Gemmes',
+        checkCondition: () => state.characters.queen === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_tom', 
+        name: 'Débloqué Tom',
+        desc: 'Recruter Tom, le Gobelin.',
+        rewardText: 'Récompense : 65 💎 Gemmes',
+        checkCondition: () => state.characters.goblin === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_sillas', 
+        name: 'Débloqué Sillas',
+        desc: 'Recruter Sillas, le Dragon.',
+        rewardText: 'Récompense : 70 💎 Gemmes',
+        checkCondition: () => state.characters.dragon === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_paul', 
+        name: 'Débloqué Paul',
+        desc: 'Recruter Paul, l\'Archimage.',
+        rewardText: 'Récompense : 75 💎 Gemmes',
+        checkCondition: () => state.characters.archmage === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_benjamin', 
+        name: 'Débloqué Benjamin',
+        desc: 'Recruter Benjamin, la Grande Prêtresse.',
+        rewardText: 'Récompense : 90 💎 Gemmes',
+        checkCondition: () => state.characters.high_priestess === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_dorian', 
+        name: 'Débloqué Dorian',
+        desc: 'Recruter Dorian, le Seigneur Démon.',
+        rewardText: 'Récompense : 80 💎 Gemmes',
+        checkCondition: () => state.characters.demon_lord === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_maxime_titan', name: 'Débloqué Maxime',
+        desc: 'Réveiller le Titan.',
+        rewardText: 'Récompense : 100 💎 Gemmes',
+        checkCondition: () => state.characters.titan === 1,
+        grantReward: () => { state.gems += 100; }
+    },
+    {
+        id: 'q_unlock_maxence', 
+        name: 'Débloqué Maxence',
+        desc: 'Recruter Maxence, l\'Ange.',
+        rewardText: 'Récompense : 105 💎 Gemmes',
+        checkCondition: () => state.characters.angel === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_quentinpg', 
+        name: 'Débloqué Quentin P.G',
+        desc: 'Recruter Quentin P.G, la Reine Elfe.',
+        rewardText: 'Récompense : 110 💎 Gemmes',
+        checkCondition: () => state.characters.elf_queen === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_hugo', 
+        name: 'Débloqué Hugo',
+        desc: 'Recruter Hugo, le Demi-Dieu.',
+        rewardText: 'Récompense : 120 💎 Gemmes',
+        checkCondition: () => state.characters.demigod === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_mahinc', 
+        name: 'Débloqué Mahinc',
+        desc: 'Recruter Mahinc, l\'Entité Cosmique.',
+        rewardText: 'Récompense : 200 💎 Gemmes',
+        checkCondition: () => state.characters.cosmic_entity === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_marini', 
+        name: 'Débloqué Marini',
+        desc: 'Recruter Marini, le Tisseur Éthéré.',
+        rewardText: 'Récompense : 222 💎 Gemmes',
+        checkCondition: () => state.characters.ethereal_weaver === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_garnotel', 
+        name: 'Débloqué Garnotel',
+        desc: 'Recruter Garnotel, le Prophète du Vide.',
+        rewardText: 'Récompense : 300 💎 Gemmes',
+        checkCondition: () => state.characters.void_prophet === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_libertato', 
+        name: 'Débloqué Libertato',
+        desc: 'Recruter Libertato, le Forgeron d\'Étoiles.',
+        rewardText: 'Récompense : 500 💎 Gemmes',
+        checkCondition: () => state.characters.star_smith === 1,
+        grantReward: () => { state.gems += 5; }
+    },
+    {
+        id: 'q_unlock_quentinboss', 
+        name: 'Débloqué Quentin le BOSS',
+        desc: 'Recruter Quentin le BOSS, l\'Être Supérieur.',
+        rewardText: 'Récompense : 10000 💎 Gemmes',
+        checkCondition: () => state.characters.supreme_being === 1,
+        grantReward: () => { state.gems += 5; }
+    }
+];
+
+
+// Total de déblocages possibles (Mis à jour V20)
+// 23 Chars + 5 Bld + 3 Know-Bld + 18 Gods + 4 Temples + 7 Res + 5 Frag + 6 Art = 71
+const TOTAL_UNLOCKS = characters.length + buildings.length + knowledge_buildings.length + (gods.length * MAX_GOD_LEVEL) + purification_temples.length + research_nodes.length + fragments_upgrades.length + artifacts.length; 
+
+const EVOLUTION_STAGES = [ { threshold: 0, icon: '🦧', name: 'Homme des Cavernes (Primitif)' }, { threshold: 10, icon: '🧑‍🌾', name: 'Paysan (Début d\'activité)' }, { threshold: 20, icon: '⛏️', name: 'Mineur (Développement minier)' }, { threshold: 30, icon: '👷', name: 'Ouvrier Qualifié (Investisseur)' }, { threshold: 40, icon: '🧑‍⚖️', name: 'Petit Propriétaire (Riche)' }, { threshold: 50, icon: '👑', name: 'Monarque (Conquête territoriale)' }, { threshold: 60, icon: '🔱', name: 'Souverain Purificateur (Pieusement Riche)' }, { threshold: 70, icon: '🤵', name: 'Magnat en Costume (Légendaire)' }, { threshold: 80, icon: '🌌', name: 'Maître Arcanique (Pouvoirs Cosmiques)' }, { threshold: 90, icon: '🌟', name: 'Défenseur des Royaumes (Héros Ultime)' }, { threshold: 95, icon: '🪐', name: 'Demi-Dieu (Entité Galactique)' }, { threshold: 100, icon: '⭐', name: 'Être Supérieur (Créateur d\'Univers)' }, ];
+
+// --- Fonctions utilitaires ---
+function fmt(n){return Number(n).toLocaleString('fr-FR',{maximumFractionDigits:2});}
+function log(msg){const d=document.createElement('div');d.textContent=msg;document.getElementById('log').appendChild(d);document.getElementById('log').scrollTop=document.getElementById('log').scrollHeight;}
+
+function getGodMultiplier(baseMult, level) {
+    let godBonus = 0;
+    // Bonus Fragments
+    const godBoostUpgrade = fragments_upgrades.find(u => u.id === 'god_boost_1');
+    if (godBoostUpgrade && state.fragments_upgrades[godBoostUpgrade.id]) { 
+        godBonus += godBoostUpgrade.value;
+    }
+    // Bonus Recherche V20
+    const researchBoost = research_nodes.find(u => u.id === 'divine_synergy');
+    if (researchBoost && state.research[researchBoost.id]) { 
+        godBonus += researchBoost.value;
+    }
+    
+    return baseMult + (level - 1) + godBonus; 
+}
+function getGodCost(baseCost, nextLevel) { if (nextLevel === 1) return baseCost; return baseCost * Math.pow(5, nextLevel - 1); }
+
+// --- Fonctions de Gestion des Événements ---
+function renderEventBanner() {
+    const banner = document.getElementById('event-banner');
+    if (state.randomEvent.active) {
+        banner.style.display = 'block';
+        const event = RANDOM_EVENTS.find(e => e.id === state.randomEvent.type);
+        banner.textContent = `💥 ${state.randomEvent.message} (Temps restant: ${Math.ceil(state.randomEvent.duration)}s) 💥`;
+        banner.className = ''; 
+        if (event.type === 'positive') { banner.classList.add('event-positive'); }
+        else { banner.classList.add('event-negative'); }
+    } else {
+        banner.style.display = 'none';
+        banner.className = '';
+    }
+}
+function triggerRandomEvent() {
+    if (state.randomEvent.active) return; 
+    const totalWeight = RANDOM_EVENTS.reduce((acc, event) => acc + event.weight, 0);
+    let randomRoll = Math.random() * totalWeight;
+    let selectedEvent = null;
+    for (const event of RANDOM_EVENTS) {
+        if (randomRoll < event.weight) { selectedEvent = event; break; }
+        randomRoll -= event.weight;
+    }
+    if (!selectedEvent) return; 
+    state.randomEvent.active = true;
+    state.randomEvent.type = selectedEvent.id;
+    state.randomEvent.duration = selectedEvent.duration;
+    state.randomEvent.message = selectedEvent.message;
+    if (selectedEvent.id === 'mine') {
+        const gemGain = 100; 
+        state.gems += gemGain;
+        log(`💎 Découverte de Mine ! +${gemGain} Gemmes !`);
+        renderStats(); 
+    }
+    log(`ÉVÉNEMENT: ${selectedEvent.message}`);
+    renderEventBanner();
+}
+function clearRandomEvent() {
+    state.randomEvent.active = false;
+    state.randomEvent.type = null;
+    state.randomEvent.duration = 0;
+    state.randomEvent.message = '';
+    renderEventBanner();
+}
+
+// --- Fonctions de Prestige (V18) ---
+
+function calculateFragmentsGained() {
+    const totalEarnings = (state.totalLifetimeCoins || 0) + (state.totalLifetimePotions || 0); 
+    const threshold = 10000000000; 
+    if (totalEarnings < threshold) return 0;
+    
+    let fragments = Math.floor(Math.log(totalEarnings / threshold) / Math.log(1.1));
+    
+    let mult = 1.0;
+    if (state.artifacts.artifact_fragment_boost) { mult += 0.1; }
+    if (state.artifacts.core_of_infinity) { mult += 0.05; }
+    if (state.fragments_upgrades.cosmic_understanding) { mult += 0.05; }
+    
+    fragments *= mult;
+    
+    return Math.max(0, Math.floor(fragments)); 
+}
+
+function renderPrestigeButton() {
+    const container = document.getElementById('prestigeContainer');
+    container.innerHTML = ''; 
+    
+    if (state.research.artifact_forge) {
+        const fragmentsGained = calculateFragmentsGained();
+        const minFragments = 1; 
+
+        const prestigeBtn = document.createElement('button');
+        prestigeBtn.className = 'big-btn prestige-btn';
+        prestigeBtn.textContent = `💫 OUVRIR LA FAILLE 💫`;
+        
+        prestigeBtn.disabled = fragmentsGained < minFragments;
+        
+        const threshold = 10000000000; 
+        const currentEarnings = (state.totalLifetimeCoins || 0) + (state.totalLifetimePotions || 0);
+
+        let rewardText = `Gagnera ${fmt(fragmentsGained)} Fragments Cosmiques.`;
+        if (fragmentsGained < minFragments) {
+            const needed = threshold * Math.pow(1.1, 1) - currentEarnings;
+            rewardText = `Accumulez plus de ressources pour gagner au moins 1 Fragment. (Manque: ${fmt(needed)} cumulé)`;
+        }
+        
+        prestigeBtn.title = `ATTENTION: Réinitialise la progression (Pièces, Potions, Connaissances, Personnages, Bâtiments, Temples). \nConserve : Gemmes, Dieux, Recherche, Fragments et Artéfacts. \n${rewardText}`;
+
+        prestigeBtn.onclick = () => {
+            if (fragmentsGained >= minFragments) {
+                if (confirm(`Êtes-vous sûr de vouloir réinitialiser votre progression (Prestige)? Vous gagnerez ${fmt(fragmentsGained)} Fragments Cosmiques permanents.`)) {
+                    handlePrestige(fragmentsGained);
+                }
+            }
+        };
+
+        const details = document.createElement('div');
+        details.style.textAlign = 'center';
+        details.style.color = '#ccc';
+        details.style.marginTop = '5px';
+        details.innerHTML = rewardText;
+
+        container.appendChild(prestigeBtn);
+        container.appendChild(details);
+    }
+}
+
+function handlePrestige(fragmentsGained) {
+    
+    state.fragmentsCosmiques += fragmentsGained;
+    log(`✨ PRESTIGE EFFECTUÉ ! Gain de ${fmt(fragmentsGained)} Fragments Cosmiques.`);
+    
+    state.coins = 0;
+    state.potions = 0;
+    state.knowledge = 0;
+    state.characters = {};
+    state.buildings = {};
+    state.temples = {};
+    state.knowledge_buildings = {};
+    
+    state.totalLifetimeCoins = 0;
+    state.totalLifetimePotions = 0;
+    
+    let initialCorruption = 1;
+    const corruptionUpgrade = fragments_upgrades.find(u => u.id === 'corruption_start_reduce');
+    if (corruptionUpgrade && state.fragments_upgrades[corruptionUpgrade.id]) {
+        initialCorruption *= corruptionUpgrade.value; 
+    }
+    state.corruption = initialCorruption;
+    state.corruptionActive = true; 
+
+    state.gemTimer = 600;
+    lastTime = performance.now(); 
+    
+    renderAll();
+}
+
+// --- Fonctions de Rendu (Stats, Boutiques, etc.) ---
+
+function renderStats(){
+    document.getElementById('coins').textContent=fmt(Math.floor(state.coins));
+    document.getElementById('potions').textContent=fmt(Math.floor(state.potions));
+    document.getElementById('gems').textContent=fmt(Math.floor(state.gems));
+    document.getElementById('knowledge').textContent=fmt(Math.floor(state.knowledge)); 
+    document.getElementById('fragments').textContent=fmt(state.fragmentsCosmiques); 
+    document.getElementById('arcaneCores').textContent=fmt(state.arcaneCores); 
+
+    
+    const corruptionStatElement = document.getElementById('corruptionStat');
+    const {corruptionPerSec: corruptionRate} = computePerSec(); 
+    
+    if (state.corruptionActive) {
+        document.getElementById('corruption').textContent = `${state.corruption.toFixed(2)}%`;
+        corruptionStatElement.style.color = state.corruption > 50 ? '#ff8888' : '#c8c8c8';
+        corruptionStatElement.style.backgroundColor = 'rgba(80, 0, 0, 0.7)';
+        corruptionStatElement.title = `Taux de Corruption : ${corruptionRate.toFixed(3)}%/sec`;
+    } else {
+        document.getElementById('corruption').textContent = `INACTIVE`;
+        corruptionStatElement.style.backgroundColor = 'rgba(0, 0, 80, 0.7)';
+        corruptionStatElement.style.color = '#76e8ff';
+    }
+
+    const {coinPerSec, potionPerSec, knowledgePerSec: kpsValue} = computePerSec();
+    document.getElementById('cps').textContent=fmt(coinPerSec);
+    document.getElementById('pps').textContent=fmt(potionPerSec);
+    document.getElementById('kps').textContent=fmt(kpsValue); 
+
+    const autoClickBtn = document.getElementById('autoclickBtn');
+    if (state.autoClickActive) {
+        autoClickBtn.textContent = 'Auto-clicker (ACTIF)';
+        autoClickBtn.disabled = true;
+        autoClickBtn.style.backgroundColor = '#2ecc71'; 
+        autoClickBtn.style.color = '#111';
+    } else {
+        autoClickBtn.textContent = 'Auto‑clicker (200 gemmes)';
+        autoClickBtn.disabled = state.gems < 200;
+        autoClickBtn.style.backgroundColor = ''; 
+        autoClickBtn.style.color = '';
+    }
+}
+
+function renderTempleShop() { 
+    const shop = document.getElementById('templeShop'); 
+    shop.innerHTML = ''; 
+    purification_temples.forEach(t => { 
+        const owned = state.temples[t.id] ? state.temples[t.id].count : 0; 
+        const currentPurification = t.purification_rate * owned; 
+        const card=document.createElement('div'); card.className='card'; 
+        const content = document.createElement('div'); content.className = 'card-content'; 
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = t.icon; content.appendChild(icon); 
+        const coinCost = t.coin_cost, potionCost = t.potion_cost, gemCost = t.gem_cost || 0; 
+        const costString = `${fmt(coinCost)} Pièces & ${fmt(potionCost)} Potions` + (gemCost > 0 ? ` & ${fmt(gemCost)} Gemmes` : ''); 
+        const details = document.createElement('div'); 
+        details.innerHTML=`<h3>${t.name} (x${owned})</h3><div class="desc">Réduction Corruption/sec : -${fmt(currentPurification)}</div><div class="desc">Coût : ${costString}</div>`; 
+        content.appendChild(details); card.appendChild(content); 
+        const actions=document.createElement('div'); actions.className = 'card-actions'; 
+        const buyBtn=document.createElement('button'); 
+        buyBtn.textContent = `Construire`; 
+        buyBtn.disabled = state.coins < coinCost || state.potions < potionCost || state.gems < gemCost || !state.corruptionActive; 
+        if (!state.corruptionActive) { buyBtn.title = "La Corruption est inactive ?"; } 
+        buyBtn.onclick=()=>{ 
+            if(state.coins >= coinCost && state.potions >= potionCost && state.gems >= gemCost && state.corruptionActive){ 
+                state.coins -= coinCost; state.potions -= potionCost; state.gems -= gemCost; 
+                state.temples[t.id] = state.temples[t.id] || {count: 0}; state.temples[t.id].count += 1; 
+                log(`🙏 Construction du ${t.name} ! Corruption réduite.`); 
+                state.corruption = Math.max(0, state.corruption - 5); 
+                renderStats(); renderTempleShop(); updateEvolution(); 
+            } else {
+                let msg = "❌ Construction impossible.";
+                if (!state.corruptionActive) msg += " La Corruption doit être active.";
+                else msg += " Vérifiez vos ressources.";
+                log(msg);
+            }
+        }; 
+        actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card); 
+    }); 
+}
+function renderGodShop(){ 
+    const shop=document.getElementById('godShop'); 
+    shop.innerHTML=''; 
+    gods.forEach(g=>{ 
+        const currentLevel = state.gods[g.id] || 0; 
+        const nextLevel = currentLevel + 1; 
+        const isMaxLevel = currentLevel === MAX_GOD_LEVEL; 
+        const currentMult = getGodMultiplier(g.base_mult, currentLevel); 
+        const nextMult = getGodMultiplier(g.base_mult, nextLevel); 
+        const nextCost = getGodCost(g.base_cost, nextLevel); 
+        const card=document.createElement('div'); card.className='card'; 
+        if (isMaxLevel) { card.classList.add('god-max-level'); } 
+        const content = document.createElement('div'); content.className = 'card-content'; 
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = g.icon; content.appendChild(icon); 
+        const typeStr = g.type === 'both' ? 'pièces et potions' : g.type === 'coin' ? 'pièces' : 'potions'; 
+        let effectDesc = `Multiplie la production de ${typeStr} par **${currentLevel === 0 ? 'x1.0' : `x${currentMult.toFixed(1)}`}** (Niveau ${currentLevel}/${MAX_GOD_LEVEL}).`; 
+        if (!isMaxLevel) { effectDesc += `<br>Prochaine amélioration : **x${nextMult.toFixed(1)}**.`; } 
+        const details = document.createElement('div'); 
+        details.innerHTML=`<h3>${g.name}</h3><div class="desc">${effectDesc}</div>`; 
+        content.appendChild(details); card.appendChild(content); 
+        const actions=document.createElement('div'); actions.className = 'card-actions'; 
+        const buyBtn=document.createElement('button'); 
+        if (isMaxLevel) { 
+            buyBtn.textContent = 'Niveau MAX'; 
+            buyBtn.disabled = true; 
+            buyBtn.className = 'obtained'; 
+        } else { 
+            buyBtn.textContent = `Améliorer: ${fmt(nextCost)} Gemmes`; 
+            buyBtn.disabled = state.gems < nextCost; 
+        } 
+        buyBtn.onclick=()=>{ 
+            if(!isMaxLevel && state.gems >= nextCost){ 
+                state.gems -= nextCost; 
+                state.gods[g.id] = nextLevel; 
+                log(`🙏 Le ${g.name} est monté au Niveau ${nextLevel} ! Multiplicateur x${nextMult.toFixed(1)} activé.`); 
+                renderStats(); renderGodShop(); updateEvolution(); 
+            } else {
+                 log(`❌ Amélioration impossible du ${g.name}. Vérifiez les ${fmt(nextCost)} Gemmes requises ou le niveau max.`);
+            }
+        }; 
+        actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card); 
+    }); 
+}
+function renderResearchTree(){ 
+    const tree = document.getElementById('researchTree'); 
+    tree.innerHTML=''; 
+    research_nodes.forEach(r => { 
+        const isUnlocked = state.research[r.id] === true; 
+        const card=document.createElement('div'); card.className='card'; 
+        const content = document.createElement('div'); content.className = 'card-content'; 
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = r.icon; content.appendChild(icon); 
+        const details = document.createElement('div'); 
+        const status = isUnlocked ? '<span style="color:#2ecc71;">[DÉVERROUILLÉ]</span>' : '<span style="color:#ff8888;">[BLOQUÉ]</span>'; 
+        details.innerHTML=`<h3>${r.name} ${status}</h3><div class="desc">${r.desc}</div><div class="desc">Coût : ${fmt(r.cost)} 📜 Savoir</div>`; 
+        content.appendChild(details); card.appendChild(content); 
+        const actions=document.createElement('div'); actions.className = 'card-actions'; 
+        const buyBtn=document.createElement('button'); 
+        if (isUnlocked) { 
+            buyBtn.textContent = 'ACQUIS'; 
+            buyBtn.disabled = true; 
+            buyBtn.className = 'obtained'; 
+        } else { 
+            buyBtn.textContent = `RECHERCHER`; 
+            buyBtn.disabled = state.knowledge < r.cost; 
+        } 
+        buyBtn.onclick=()=>{ 
+            if(!isUnlocked && state.knowledge >= r.cost){ 
+                state.knowledge -= r.cost; 
+                state.research[r.id] = true; 
+                log(`🔬 Recherche terminée : ${r.name} ! Bonus permanent activé.`); 
+                renderStats(); 
+                renderResearchTree(); 
+                renderGodShop(); 
+                updateEvolution(); 
+                renderPrestigeButton(); 
+            } else {
+                log(`❌ Recherche impossible : ${r.name}. Vérifiez les ${fmt(r.cost)} Savoir requis.`);
+            }
+        }; 
+        actions.appendChild(buyBtn); card.appendChild(actions); tree.appendChild(card); 
+    }); 
+}
+function renderFragmentsShop() {
+    const shop = document.getElementById('fragmentsShop');
+    shop.innerHTML = '';
+    fragments_upgrades.forEach(u => {
+        const isPurchased = state.fragments_upgrades[u.id] === true;
+        const card=document.createElement('div'); card.className='card';
+        if (isPurchased) { card.classList.add('fragment-upgrade-purchased'); }
+        const content = document.createElement('div'); content.className = 'card-content';
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = u.icon; content.appendChild(icon);
+        const details = document.createElement('div');
+        const status = isPurchased ? '<span style="color:#2ecc71;">[ACQUIS]</span>' : '<span style="color:#ff8888;">[DISPONIBLE]</span>';
+        details.innerHTML=`<h3>${u.name} ${status}</h3><div class="desc">${u.desc}</div><div class="desc">Coût : ${fmt(u.cost)} 💫 Fragments</div>`;
+        content.appendChild(details); card.appendChild(content);
+        const actions=document.createElement('div'); actions.className = 'card-actions';
+        const buyBtn=document.createElement('button');
+        if (isPurchased) { buyBtn.textContent = 'ACTIF'; buyBtn.disabled = true; buyBtn.className = 'obtained'; }
+        else { buyBtn.textContent = `ACHETER`; buyBtn.disabled = state.fragmentsCosmiques < u.cost; }
+        buyBtn.onclick=()=>{
+            if(!isPurchased && state.fragmentsCosmiques >= u.cost){
+                state.fragmentsCosmiques -= u.cost; state.fragments_upgrades[u.id] = true; 
+                log(`✨ Amélioration Cosmique achetée : ${u.name} ! Bonus permanent activé.`);
+                renderStats(); renderFragmentsShop(); renderGodShop(); updateEvolution(); 
+            } else { log(`❌ Achat impossible. Manque de Fragments Cosmiques.`); }
+        };
+        actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card);
+    });
+}
+function renderArtifactForge() {
+    const forge = document.getElementById('artifactForge');
+    forge.innerHTML = '';
+    const canAfford = state.knowledge >= CORE_CRAFT_COST_KNOWLEDGE && state.gems >= CORE_CRAFT_COST_GEMS;
+    const craftBtn = document.createElement('button');
+    craftBtn.className = 'craft-btn';
+    craftBtn.innerHTML = `💠 Forger 1 Noyau Arcanique 💠<div class="desc">Coût: ${fmt(CORE_CRAFT_COST_KNOWLEDGE)} 📜 et ${fmt(CORE_CRAFT_COST_GEMS)} 💎</div>`;
+    craftBtn.disabled = !canAfford;
+    craftBtn.onclick = () => {
+        if (state.knowledge >= CORE_CRAFT_COST_KNOWLEDGE && state.gems >= CORE_CRAFT_COST_GEMS) {
+            state.knowledge -= CORE_CRAFT_COST_KNOWLEDGE; state.gems -= CORE_CRAFT_COST_GEMS; state.arcaneCores += 1;
+            log(`💠 Fabrication réussie ! Vous avez forgé 1 Noyau Arcanique !`);
+            renderStats(); renderArtifactForge(); renderArtifactShop();
+        } else { log(`❌ Fabrication impossible. Ressources insuffisantes.`); }
+    };
+    forge.appendChild(craftBtn);
+    renderArtifactShop(); 
+}
+function renderArtifactShop() {
+    const shop = document.getElementById('artifactShop');
+    shop.innerHTML = '';
+    artifacts.forEach(a => {
+        const isPurchased = state.artifacts[a.id] === true;
+        const card=document.createElement('div'); card.className='card';
+        if (isPurchased) { card.classList.add('artifact-purchased'); }
+        const content = document.createElement('div'); content.className = 'card-content';
+        const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = a.icon; content.appendChild(icon);
+        const details = document.createElement('div');
+        const status = isPurchased ? '<span style="color:#2ecc71;">[FORGÉ]</span>' : '<span style="color:#ff8888;">[REQUIS]</span>';
+        details.innerHTML=`<h3>${a.name} ${status}</h3><div class="desc">${a.desc}</div><div class="desc">Coût : ${fmt(a.cost)} 💠 Noyau(x)</div>`;
+        content.appendChild(details); card.appendChild(content);
+        const actions=document.createElement('div'); actions.className = 'card-actions';
+        const buyBtn=document.createElement('button');
+        if (isPurchased) { buyBtn.textContent = 'ACTIF'; buyBtn.disabled = true; buyBtn.className = 'obtained'; }
+        else { buyBtn.textContent = `FORGER`; buyBtn.disabled = state.arcaneCores < a.cost; }
+        buyBtn.onclick=()=>{
+            if(!isPurchased && state.arcaneCores >= a.cost){
+                state.arcaneCores -= a.cost; state.artifacts[a.id] = true; 
+                log(`🔧 Artéfact Forgé : ${a.name} ! Bonus permanent activé.`);
+                renderStats(); renderArtifactShop(); updateEvolution(); 
+            } else { log(`❌ Forge impossible. Manque de Noyaux Arcaniques.`); }
+        };
+        actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card);
+    });
+}
+function renderQuestLog() {
+    const log = document.getElementById('questLog');
+    log.innerHTML = '';
+    
+    QUESTS.forEach(quest => {
+        const isCompleted = state.quests[quest.id] === true;
+        
+        const card = document.createElement('div');
+        card.className = 'quest-card';
+        if (isCompleted) {
+            card.classList.add('quest-completed');
+        }
+        
+        const title = document.createElement('h4');
+        title.textContent = quest.name;
+        
+        const desc = document.createElement('div');
+        desc.className = 'desc';
+        desc.textContent = quest.desc;
+        
+        const reward = document.createElement('div');
+        reward.className = 'quest-reward';
+        reward.textContent = isCompleted ? 'TERMINÉE' : quest.rewardText;
+        
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(reward);
+        log.appendChild(card);
+    });
+}
+function checkQuests() {
+    let rewardGranted = false;
+    QUESTS.forEach(quest => {
+        if (!state.quests[quest.id]) { 
+            if (quest.checkCondition()) {
+                state.quests[quest.id] = true;
+                log(`🎉 Quête terminée: ${quest.name}! ${quest.rewardText}`);
+                quest.grantReward();
+                rewardGranted = true;
+            }
+        }
+    });
+    
+    if (rewardGranted) {
+        renderQuestLog();
+        renderStats();
+    }
+}
+
+
+// --- Fonctions de Rendu (Statiques) ---
+function checkAutoAcquisitionCharacters() { let acquired = false; characters.forEach(c => { const owned = state.characters[c.id] || 0; const resource = c.type === 'coin' ? state.coins : state.potions; if (owned === 0 && resource >= c.cost) { state.characters[c.id] = 1; log(`✨ Nouveau Palier atteint! ${c.name} est maintenant dans votre équipe.`); acquired = true; } }); if (acquired) { renderShop(); } }
+function checkAutoAcquisitionBuildings() { let bought = false; buildings.forEach(b => { const cost = b.cost; while (state.potions >= cost) { state.potions -= cost; state.buildings[b.id] = state.buildings[b.id] || {count: 0}; state.buildings[b.id].count += 1; bought = true; } }); knowledge_buildings.forEach(b => { const cost = b.cost; while (state.potions >= cost) { state.potions -= cost; state.knowledge_buildings[b.id] = state.knowledge_buildings[b.id] || {count: 0}; state.knowledge_buildings[b.id].count += 1; bought = true; } }); if (bought) { renderStats(); renderBuildingShop(); renderKnowledgeBuildings(); } }
+function calculateUnlocks() { 
+    let unlockedCount = 0; 
+    characters.forEach(c => { if (state.characters[c.id] === 1) { unlockedCount++; } }); 
+    buildings.forEach(b => { const s = state.buildings[b.id]; if (s && s.count > 0) { unlockedCount++; } }); 
+    knowledge_buildings.forEach(b => { const s = state.knowledge_buildings[b.id]; if (s && s.count > 0) { unlockedCount++; } }); 
+    gods.forEach(g => { unlockedCount += (state.gods[g.id] || 0); }); 
+    purification_temples.forEach(t => { const s = state.temples[t.id]; if (s && s.count > 0) { unlockedCount++; } }); 
+    research_nodes.forEach(r => { if (state.research[r.id] === true) { unlockedCount++; } }); 
+    fragments_upgrades.forEach(u => { if (state.fragments_upgrades[u.id] === true) { unlockedCount++; } });
+    artifacts.forEach(a => { if (state.artifacts[a.id] === true) { unlockedCount++; } });
+    
+    const progress = Math.min(unlockedCount, TOTAL_UNLOCKS); 
+    const percentage = (progress / TOTAL_UNLOCKS) * 100; 
+    return { progress, percentage }; 
+}
+function updateEvolution() { const { percentage } = calculateUnlocks(); const fill = document.getElementById('progress-bar-fill'); const percentText = document.getElementById('progress-percent'); const characterIcon = document.getElementById('evolution-character'); fill.style.width = percentage.toFixed(2) + '%'; percentText.textContent = `${percentage.toFixed(0)}%`; let currentStage = EVOLUTION_STAGES[0]; for (const stage of EVOLUTION_STAGES) { if (percentage >= stage.threshold) { currentStage = stage; } } characterIcon.textContent = currentStage.icon; characterIcon.title = `Statut actuel: ${currentStage.name}`; return percentage; }
+function renderShop(){ const shop=document.getElementById('shop'); shop.innerHTML=''; characters.forEach(c=>{ const owned = state.characters[c.id] || 0; const currentRate = c.rate; const isAcquired = owned === 1; const resourceIcon = c.type === 'coin' ? '💰' : '🧪'; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = c.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${c.name}</h3><div class="desc">Taux fixe: ${fmt(currentRate)} ${c.type}/sec</div><div class="desc">Possédé: ${isAcquired ? 'Oui' : 'Non'}</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyBtn=document.createElement('button'); if (isAcquired) { buyBtn.textContent = 'Obtenu'; buyBtn.disabled = true; buyBtn.className = 'obtained'; buyBtn.title = `Déverrouillé au palier de ${fmt(c.cost)} pièces.`; } else { buyBtn.textContent = `Palier: ${fmt(c.cost)} ${resourceIcon}`; buyBtn.disabled = true; buyBtn.title = `Atteignez ce montant de ressources pour déverrouiller AUTOMATIQUEMENT.`; } actions.appendChild(buyBtn); card.appendChild(actions); shop.appendChild(card); }); }
+function renderBuildingShop(){ const shop=document.getElementById('buildingShop'); shop.innerHTML=''; buildings.forEach(b=>{ const owned = state.buildings[b.id] ? state.buildings[b.id].count : 0; const currentRate = b.rate * owned; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = b.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${b.name}</h3><div class="desc">Production: ${fmt(currentRate)} pièces/sec</div><div class="desc">Possédé: ${owned} (Taux unitaire: ${b.rate}/sec)</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyInfo = document.createElement('div'); buyInfo.className = 'building-auto-info'; buyInfo.textContent = `Achat auto à ${fmt(b.cost)} 🧪`; actions.appendChild(buyInfo); card.appendChild(actions); shop.appendChild(card); }); }
+function renderKnowledgeBuildings(){ const shop=document.getElementById('knowledgeBuildingShop'); shop.innerHTML=''; knowledge_buildings.forEach(b=>{ const owned = state.knowledge_buildings[b.id] ? state.knowledge_buildings[b.id].count : 0; const currentRate = b.rate * owned; const card=document.createElement('div'); card.className='card'; const content = document.createElement('div'); content.className = 'card-content'; const icon = document.createElement('div'); icon.className = 'card-icon'; icon.textContent = b.icon; content.appendChild(icon); const details = document.createElement('div'); details.innerHTML=`<h3>${b.name}</h3><div class="desc">Production: ${fmt(currentRate)} Savoir/sec</div><div class="desc">Possédé: ${owned} (Taux unitaire: ${b.rate}/sec)</div>`; content.appendChild(details); card.appendChild(content); const actions=document.createElement('div'); actions.className = 'card-actions'; const buyInfo = document.createElement('div'); buyInfo.className = 'building-auto-info'; buyInfo.textContent = `Achat auto à ${fmt(b.cost)} 🧪`; actions.appendChild(buyInfo); card.appendChild(actions); shop.appendChild(card); }); }
+
+// --- Calcul de la production par seconde ---
+function computePerSec(){
+    let coinPerSecBase=0, potionPerSecBase=0;
+    let knowledgePerSec = 0; 
+    let totalEntities = 0;
+    let totalPurificationRate = 0;
+    
+    // 1. Production de BASE et Entités
+    for(const c of characters){ const owned=state.characters[c.id]||0; if(owned > 0) { const gain=c.rate; if(c.type==='coin') coinPerSecBase+=gain; else potionPerSecBase+=gain; totalEntities += 1; } }
+    for(const b of buildings){ const buildingState = state.buildings[b.id]; if (buildingState && buildingState.count > 0) { const count = buildingState.count; coinPerSecBase += b.rate * count; totalEntities += count; } }
+    for(const b of knowledge_buildings){ const buildingState = state.knowledge_buildings[b.id]; if (buildingState && buildingState.count > 0) { const count = buildingState.count; knowledgePerSec += b.rate * count; totalEntities += count; } }
+    for(const t of purification_temples){ const templeState = state.temples[t.id]; if (templeState && templeState.count > 0) { const count = templeState.count; totalEntities += count; totalPurificationRate += t.purification_rate * count; } }
+    
+    if (state.autoClickActive) { 
+        coinPerSecBase += (state.artifacts.artifact_autoclick_boost ? 5 : 1); 
+    }
+    if (state.artifacts.artifact_temple_boost) {
+        totalPurificationRate *= 2;
+    }
+    
+    // 2. Taux de Corruption
+    const corruptionBaseRate = totalEntities * 0.0025; 
+    const corruptionPerSec = corruptionBaseRate - totalPurificationRate; 
+    
+    // 3. Multiplicateurs (Dieux & Recherche)
+    let coinMultiplier = 1.0, potionMultiplier = 1.0, knowledgeMultiplier = 1.0;
+    gods.forEach(g => { const level = state.gods[g.id] || 0; if (level > 0) { const mult = getGodMultiplier(g.base_mult, level); if (g.type === 'coin' || g.type === 'both') { coinMultiplier *= mult; } if (g.type === 'potion' || g.type === 'both') { potionMultiplier *= mult; } } });
+    if (state.research.coin_optimization) { coinMultiplier *= research_nodes.find(n => n.id === 'coin_optimization').value; }
+    if (state.research.alchemy_base) { potionMultiplier *= research_nodes.find(n => n.id === 'alchemy_base').value; }
+    
+    if (state.research.ancient_wisdom) { knowledgeMultiplier *= research_nodes.find(n => n.id === 'ancient_wisdom').value; }
+    if (state.fragments_upgrades.knowledge_flow_1) { knowledgeMultiplier *= fragments_upgrades.find(n => n.id === 'knowledge_flow_1').value; }
+    if (state.artifacts.quill_of_sages) { knowledgeMultiplier *= 2; }
+    
+    let coinPerSec = coinPerSecBase * coinMultiplier;
+    let potionPerSec = potionPerSecBase * potionMultiplier;
+    knowledgePerSec *= knowledgeMultiplier; 
+    
+    // 4. Malus de Corruption
+    let corruptionMalus = 1.0;
+    if (state.corruptionActive) {
+        let resistanceFactor = 1.0;
+        if (state.research.corruption_shield) { resistanceFactor = research_nodes.find(n => n.id === 'corruption_shield').value; }
+        const rawMalus = 1 - (state.corruption / 100); 
+        corruptionMalus = Math.max(0, 1 - (1 - rawMalus) * resistanceFactor);
+    }
+    coinPerSec *= corruptionMalus;
+    potionPerSec *= corruptionMalus;
+    
+    // 5. Effets d'Événements Aléatoires
+    if (state.randomEvent.active) {
+        if (state.randomEvent.type === 'blessing') {
+            coinPerSec *= 5; potionPerSec *= 5; knowledgePerSec *= 5;
+        }
+        if (state.randomEvent.type === 'goblins') {
+            coinPerSec *= 0.5;
+        }
+    }
+
+    return {coinPerSec, potionPerSec, corruptionPerSec, knowledgePerSec, coinPerSecBase, potionPerSecBase};
+}
+
+// --- Gestion du Timer de Gemmes ---
+function updateGemTimer(delta) {
+    let gemSpeedFactor = 1.0;
+    if (state.research.gem_efficiency) {
+        gemSpeedFactor = research_nodes.find(n => n.id === 'gem_efficiency').value; 
+    }
+    const fragmentUpgrade = fragments_upgrades.find(u => u.id === 'gem_speed_boost_1');
+    if (fragmentUpgrade && state.fragments_upgrades[fragmentUpgrade.id]) {
+        gemSpeedFactor *= fragmentUpgrade.value;
+    }
+    
+    state.gemTimer -= delta * (1 / gemSpeedFactor); 
+    if (state.gemTimer <= 0) {
+        let corruptionMalus = 1.0;
+        if (state.corruptionActive) { corruptionMalus = Math.max(0, 1 - (state.corruption / 100)); }
+        const gemGain = 1 * corruptionMalus;
+        state.gems += gemGain; 
+        log(`🎉 Vous avez gagné ${fmt(gemGain)} Gemme(s) (Malus de Corruption appliqué: ${((1-corruptionMalus)*100).toFixed(0)}%).`);
+        state.gemTimer = 600; 
+        renderStats(); renderBuildingShop(); renderKnowledgeBuildings(); renderGodShop(); renderTempleShop();
+    }
+    const minutes = Math.floor(state.gemTimer / 60);
+    const seconds = Math.floor(state.gemTimer % 60);
+    const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById('gemTimer').textContent = `⏳ Prochaine gemme dans: ${timeStr}`;
+}
+
+// --- Boucle de jeu (Tick) ---
+let lastTime = performance.now();
+function tick(timestamp){
+    const delta = (timestamp - lastTime) / 1000; 
+    lastTime = timestamp;
+
+    updateEvolution();
+    
+    // Gestion des Événements Aléatoires
+    state.eventCheckTimer -= delta;
+    if (state.eventCheckTimer <= 0) {
+        triggerRandomEvent();
+        state.eventCheckTimer = getRandomEventCheckTime();
+    }
+    if (state.randomEvent.active) {
+        state.randomEvent.duration -= delta;
+        renderEventBanner(); 
+        if (state.randomEvent.duration <= 0) {
+            log(`L'événement "${state.randomEvent.message}" est terminé.`);
+            clearRandomEvent();
+        }
+    }
+    
+    checkQuests();
+    
+    const {coinPerSec, potionPerSec, corruptionPerSec, knowledgePerSec, coinPerSecBase, potionPerSecBase} = computePerSec();
+    
+    // Gain de ressources
+    state.coins += coinPerSec * delta;
+    state.potions += potionPerSec * delta;
+    state.knowledge += knowledgePerSec * delta; 
+    
+    state.totalLifetimeCoins += (coinPerSecBase || 0) * delta; 
+    state.totalLifetimePotions += (potionPerSecBase || 0) * delta;
+    
+    // Accumulation de Corruption
+    if (state.corruptionActive) {
+        let eventCorruptionBoost = 0;
+        if (state.randomEvent.active && state.randomEvent.type === 'contamination') {
+            eventCorruptionBoost = 0.5; 
+        }
+        state.corruption += (corruptionPerSec + eventCorruptionBoost) * delta;
+        state.corruption = Math.min(100, Math.max(0, state.corruption));
+        if (state.corruption >= 100) {
+            if (Math.floor(state.corruption) === 100 && Math.floor(state.corruption - corruptionPerSec * delta) < 100) {
+                 log("🔴 ALERTE: La Corruption est à 100%! Votre production est stoppée! Construisez des Temples!");
+            }
+        }
+    }
+
+    checkAutoAcquisitionCharacters();
+    checkAutoAcquisitionBuildings(); 
+    updateGemTimer(delta);
+    
+    renderPrestigeButton();
+    renderArtifactForge(); 
+    
+    renderStats();
+
+    requestAnimationFrame(tick);
+}
+
+// --- Fonction de Rendu Global ---
+function renderAll() {
+    renderStats();
+    renderShop();
+    renderBuildingShop();
+    renderKnowledgeBuildings(); 
+    renderGodShop();
+    renderTempleShop();
+    renderResearchTree(); 
+    renderEventBanner();
+    renderFragmentsShop();
+    renderArtifactForge(); 
+    renderPrestigeButton();
+    renderQuestLog(); 
+    updateEvolution();
+}
+
+// --- Sauvegarde & Chargement ---
+function handleSave(){
+    localStorage.setItem('fantasyTycoonState', JSON.stringify(state));
+    log("✅ Jeu sauvegardé !");
+}
+function handleLoad(){
+    const savedState = localStorage.getItem('fantasyTycoonState');
+    if(savedState){
+        const loadedState = JSON.parse(savedState);
+        
+        function safeLoadNumber(key, defaultValue) {
+            const value = loadedState[key];
+            const num = Number(value);
+            return isNaN(num) ? defaultValue : num;
+        }
+        function safeLoadObject(key, defaultValue) {
+            const value = loadedState[key];
+            return (value === undefined || value === null) ? defaultValue : value;
+        }
+
+        const newGods = {};
+        for (const [key, value] of Object.entries(safeLoadObject('gods', {}))) {
+            if (typeof value === 'boolean' && value === true) { newGods[key] = 1; }
+            else if (typeof value === 'number') { newGods[key] = value; }
+            else { newGods[key] = 0; }
+        }
+        
+        // Assignation des variables NUMÉRIQUES
+        state.coins = safeLoadNumber('coins', 0);
+        state.potions = safeLoadNumber('potions', 0);
+        state.gems = safeLoadNumber('gems', 0);
+        state.knowledge = safeLoadNumber('knowledge', 0);
+        state.corruption = safeLoadNumber('corruption', 1); 
+        
+        state.fragmentsCosmiques = safeLoadNumber('fragmentsCosmiques', 0); 
+        state.totalLifetimeCoins = safeLoadNumber('totalLifetimeCoins', 0); 
+        state.totalLifetimePotions = safeLoadNumber('totalLifetimePotions', 0); 
+        state.arcaneCores = safeLoadNumber('arcaneCores', 0);
+        
+        // Assignation des variables BOOLÉENNES/SIMPLES
+        state.corruptionActive = safeLoadObject('corruptionActive', true); 
+        state.autoClickActive = safeLoadObject('autoClickActive', false);
+        state.gemTimer = safeLoadNumber('gemTimer', 600);
+        
+        // Assignation des objets
+        state.temples = safeLoadObject('temples', {});
+        state.characters = safeLoadObject('characters', {});
+        state.buildings = safeLoadObject('buildings', {}); 
+        state.knowledge_buildings = safeLoadObject('knowledge_buildings', {});
+        state.research = safeLoadObject('research', {});
+        state.fragments_upgrades = safeLoadObject('fragments_upgrades', {}); 
+        state.artifacts = safeLoadObject('artifacts', {}); 
+        state.quests = safeLoadObject('quests', {}); 
+        state.gods = newGods; 
+        
+        state.randomEvent = safeLoadObject('randomEvent', { active: false, type: null, duration: 0, message: '' });
+        state.eventCheckTimer = safeLoadNumber('eventCheckTimer', getRandomEventCheckTime());
+        
+        log("💾 Jeu chargé avec succès (V24).");
+    } else {
+        log("👋 Bienvenue! La Corruption est déjà active... Construisez vite !");
+        state.corruption = 1;
+        state.corruptionActive = true;
+    }
+    // Rendu initial
+    renderAll();
+}
+
+// --- Initialisation du jeu ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Fonction utilitaire pour la valeur du clic
+    function getClickValue() {
+        return state.artifacts.artifact_click_mult ? 10 : 1;
+    }
+
+    document.getElementById('clickBtn').addEventListener('click', () => {
+        const clickValue = getClickValue();
+        state.coins += clickValue;
+        log(`+${clickValue} pièce${clickValue > 1 ? 's' : ''} !`);
+        checkAutoAcquisitionCharacters(); 
+    });
+    
+    // Mettre à jour le texte du bouton de clic au chargement
+    document.getElementById('clickBtn').textContent = `✨ Cliquer (+${getClickValue()} pièce)`;
+
+    document.getElementById('autoclickBtn').addEventListener('click', () => {
+        const cost = 200;
+        if (!state.autoClickActive && state.gems >= cost) {
+            state.gems -= cost;
+            state.autoClickActive = true;
+            log("✅ Auto-clicker activé !");
+            renderStats();
+        } else if (state.autoClickActive) {
+            log("❌ L'Auto-clicker est déjà actif.");
+        } else {
+            log("❌ Pas assez de gemmes pour l'auto-clicker (200 requises).");
+        }
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', handleSave);
+    document.getElementById('loadBtn').addEventListener('click', handleLoad);
+
+    handleLoad(); 
+    requestAnimationFrame(tick); 
+});
+</script>
+</body>
+</html>
